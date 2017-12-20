@@ -33,12 +33,28 @@ for x in range(0,dim):
             cipmat[x][y] = unqkey[i]
             i += 1
 
-for x in range(i,size)
+#for x in range(i,size)
+
+
+#Get user plaintext to be encrypted
+plntxt = input("Enter the message you wish to encrypt: ")
+plntxt = plntxt.replace(" ", "")
+plntxt = plntxt.upper()
+ciptxt = list(plntxt)
+
+#Insert X between repeated letters
+for x in range(1, len(ciptxt)):
+    if ciptxt[x] == ciptxt[x-1]:
+        ciptxt.insert(x,'X')
+
+#ensure that blocks of 2 can be created
+if (len(ciptxt)%2) == 1:
+    ciptxt.append('X')
+
 ###DEBUGGING###
 #print(cipmat)
 #print(alphamat)
 #print(size)
 #print(unqkey)
-
-plntxt = input("Enter the message you wish to encrypt: ")
+print(ciptxt)
 #print(plntxt)
