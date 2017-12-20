@@ -15,23 +15,27 @@ alphamat = [['A', 'B', 'C', 'D', 'E'],
 ['V','W','X','Y','Z']]
 
 dim = 5
-#size = sum(len(x) for x in alphamat)
 
+size = sum(len(x) for x in alphamat)
 
-encmat = deepcopy(alphamat)
+#prepare cipher matrix with initial values
+cipmat = deepcopy(alphamat)
 
-
+#remove repeated characters from keyword
 unqkey = ''.join(OrderedDict.fromkeys(keyword))
 
+
+#Assign unique letters of key to cipher matrix
 i=0
 for x in range(0,dim):
     for y in range(0, dim):
         if i < len(unqkey):
-            encmat[x][y] = unqkey[i]
+            cipmat[x][y] = unqkey[i]
             i += 1
 
+for x in range(i,size)
 ###DEBUGGING###
-#print(encmat)
+#print(cipmat)
 #print(alphamat)
 #print(size)
 #print(unqkey)
