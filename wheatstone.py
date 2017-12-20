@@ -3,9 +3,23 @@
 from copy import deepcopy
 from collections import OrderedDict
 
-#Assign cipher key
-keyword = "PLAYFAIREXAMPLE"
-#keyword = keyword.upper()
+#Get user input
+plntxt = input("Enter the message you wish to encrypt: ")   #plaintext message
+keyword = input("Enter the keyword to encode message: ")    #cipher keyword
+
+#Prepare plaintext for ciphering - remove whitespace, replace Js and capitalize letters
+plntxt = plntxt.upper()
+plntxt = plntxt.replace(' ','')
+plntxt = plntxt.replace('J','I')
+ciptxt = list(plntxt)
+
+#Prepare cipher keyword
+keyword = keyword.upper()
+keyword = keyword.replace(' ','')
+keyword = keyword.replace('J','I')
+
+
+###CIPHER MATRIX CREATION###
 
 #Define base alphabet matrix
 alphamat = ['A','B','C','D','E',
@@ -13,7 +27,6 @@ alphamat = ['A','B','C','D','E',
 'L','M','N','O','P',
 'Q','R','S','T','U',
 'V','W','X','Y','Z']
-
 
 wid = 5     #key table matrix width
 buf = 'X'   #buffer character for ciphertext preparation
@@ -41,14 +54,8 @@ rmdr.sort()
 for x in range(len(unqkey),len(cipmat)):
     cipmat[x] = rmdr[x-len(unqkey)]
 
-#Get user plaintext to be encrypted
-plntxt = input("Enter the message you wish to encrypt: ")
 
-#Prepare plaintext for ciphering - remove whitespace, replace Js and capitalize letters
-plntxt = plntxt.upper()
-plntxt = plntxt.replace(' ','')
-plntxt = plntxt.replace('J','I')
-ciptxt = list(plntxt)
+###CIPHERTEXT CREATION###
 
 #Insert buffer between repeated letters
 for x in range(1, len(ciptxt)):
@@ -102,13 +109,17 @@ for x in range(0,len(ciptxt)):
             b_y = 0
         else:
             b_y += 1
-    #If both x and y values are different, swap y values
+    #If both x and y values are different, swap x values
     else:
-        a_y, b_y = b_y, a_y
+        a_x, b_x = b_x, a_x
 
+    #Replace existing block with newly ciphered one
     a = cipmat[(a_y*wid)+a_x]
     b = cipmat[(b_y*wid)+b_x]
     ciptxt[x] = a + b
+
+
+###OUTPUT###
 
 print("KEYWORD: " + keyword)
 print("Ciphertext: " + ' '.join(ciptxt))
