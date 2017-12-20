@@ -26,31 +26,34 @@ def menu():
     """)
     choice = True
     while(choice != 0):
-        choice = int(input("please select: "))
+        try:
+            choice = int(input("please select: "))
 
-        if(choice == 1):
-            key = int(input("Enter the rotation value(key): "))
-            plntxt = input("Enter the text you want to encrypt: ")
-            plntxt = plntxt.upper()
-            plntxt = list(plntxt)
-            ciptxt = enc(plntxt, key)
+            if(choice == 1):
+                key = int(input("Enter the rotation value(key): "))
+                plntxt = input("Enter the text you want to encrypt: ")
+                plntxt = plntxt.upper()
+                plntxt = list(plntxt)
+                ciptxt = enc(plntxt, key)
 
-            print("Key: " + str(key))
-            print("Ciphertext: " + ''.join(ciptxt))
+                print("Key: " + str(key))
+                print("Ciphertext: " + ''.join(ciptxt))
 
-        elif(choice == 2):
-            key = int(input("Enter the rotation value(key): "))
-            plntxt = input("Enter the text you want to encrypt")
-            plntxt = plntxt.upper()
-            plntxt = list(plntxt)
-            ciptxt = enc(plntxt, key)
+            elif(choice == 2):
+                key = int(input("Enter the rotation value(key): "))
+                plntxt = input("Enter the text you want to encrypt")
+                plntxt = plntxt.upper()
+                plntxt = list(plntxt)
+                ciptxt = enc(plntxt, key)
 
-            print("Key: " + str(key))
-            print("Plaintext: " + ''.join(ciptxt))
+                print("Key: " + str(key))
+                print("Plaintext: " + ''.join(ciptxt))
 
-        elif(choice == 0):
-            print("goodbye!")
-        else:
-            print("please try again!")
+            elif(choice == 0):
+                print("goodbye!")
+            else:
+                print("please try again!")
+        except ValueError:
+            print("Please use a numeric value")
 
 menu()
