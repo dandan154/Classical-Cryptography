@@ -222,13 +222,5 @@ def main_menu():
 
         else:
             print("please try again!")
-
+            
 main_menu()
-
-###DEBUGGING###
-#print(cipmat)
-#print(alphamat)
-#print(size)
-#print(unqkey)
-#print(ciptxt)
-#print(plntxt)
