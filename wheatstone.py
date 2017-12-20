@@ -30,19 +30,27 @@ unqkey = ''.join(OrderedDict.fromkeys(keyword))
 key = list(unqkey)
 
 #Assign unique letters of key to cipher matrix
-i=0
 for x in range(0,len(unqkey)):
             cipmat[x] = unqkey[x]
 
-#for x in range(i,size)
+#create list of remaining letters not in the key
+rmdr = list(set(alphamat) - set(key))
 
+#ensure alphabetical order of remaining letters
+rmdr.sort()
+
+for x in range(len(unqkey),len(cipmat)):
+    cipmat[x] = rmdr[(x-len(unqkey))]
+
+print(cipmat)
 
 #Get user plaintext to be encrypted
 plntxt = input("Enter the message you wish to encrypt: ")
 
-#Prepare plaintext for ciphering - remove whitespace and capitalize letters
-plntxt = plntxt.replace(" ", "")
+#Prepare plaintext for ciphering - remove whitespace, replace Js and capitalize letters
 plntxt = plntxt.upper()
+plntxt = plntxt.replace(' ', '')
+plntxt = plntxt.replace('J','I')
 ciptxt = list(plntxt)
 
 #Insert buffer between repeated letters
@@ -55,9 +63,9 @@ if (len(ciptxt)%2) == 1:
     ciptxt.append(buf)
 
 ###DEBUGGING###
-print(cipmat)
+#print(cipmat)
 #print(alphamat)
 #print(size)
 #print(unqkey)
-print(ciptxt)
+#print(ciptxt)
 #print(plntxt)
