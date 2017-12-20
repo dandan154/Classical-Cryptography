@@ -3,186 +3,227 @@
 from copy import deepcopy
 from collections import OrderedDict
 
-#Get user input
-keyword = input("Enter the keyword to encode message: ")    #cipher keyword
-plntxt = input("Enter the message you wish to encrypt: ")   #plaintext message
-cipin = input("Enter a ciphertext to decode: ")           #cipher to decrypt
+###PREPARE TEXT FOR PARSING###
+def prepare_text(x):
 
-#Prepare plaintext for ciphering - remove whitespace, replace Js and capitalize letters
-plntxt = plntxt.upper()
-plntxt = plntxt.replace(' ','')
-plntxt = plntxt.replace('J','I')
-ciptxt = list(plntxt)
+    x = x.upper()
+    x = x.replace(' ','')
+    x = x.replace('J','I')
 
-#Prepare cipher keyword
-keyword = keyword.upper()
-keyword = keyword.replace(' ','')
-keyword = keyword.replace('J','I')
-
-#Prepare cipher for decryption
-cipin = cipin.upper()
-cipin = cipin.replace(' ','')
-cipin = cipin.replace('J','I')
-cipin = list(cipin)
+    return x
 
 ###CIPHER MATRIX CREATION###
+def create_matrix():
+    global ciptxt, cipmat, keyword
+    #Define base alphabet matrix
+    alphamat = ['A','B','C','D','E',
+    'F','G','H','I','K',
+    'L','M','N','O','P',
+    'Q','R','S','T','U',
+    'V','W','X','Y','Z']
 
-#Define base alphabet matrix
-alphamat = ['A','B','C','D','E',
-'F','G','H','I','K',
-'L','M','N','O','P',
-'Q','R','S','T','U',
-'V','W','X','Y','Z']
 
-wid = 5     #key table matrix width
-buf = 'X'   #buffer character for ciphertext preparation
+    #Prepare cipher matrix with initial values
+    cipmat = deepcopy(alphamat)
 
-#Prepare cipher matrix with initial values
-cipmat = deepcopy(alphamat)
+    #Remove repeated characters from keyword
+    unqkey = ''.join(OrderedDict.fromkeys(keyword))
 
-#Remove repeated characters from keyword
-unqkey = ''.join(OrderedDict.fromkeys(keyword))
+    #Create list from key
+    key = list(unqkey)
 
-#Create list from key
-key = list(unqkey)
+    #Assign unique letters of key to cipher matrix
+    for x in range(0,len(unqkey)):
+                cipmat[x] = unqkey[x]
 
-#Assign unique letters of key to cipher matrix
-for x in range(0,len(unqkey)):
-            cipmat[x] = unqkey[x]
+    #Create list of remaining letters not in the key
+    rmdr = list(set(alphamat) - set(key))
 
-#Create list of remaining letters not in the key
-rmdr = list(set(alphamat) - set(key))
+    #Order remaining letters alphabetically
+    rmdr.sort()
 
-#Order remaining letters alphabetically
-rmdr.sort()
-
-#Assign remaining letters to cipher matrix
-for x in range(len(unqkey),len(cipmat)):
-    cipmat[x] = rmdr[x-len(unqkey)]
+    #Assign remaining letters to cipher matrix
+    for x in range(len(unqkey),len(cipmat)):
+        cipmat[x] = rmdr[x-len(unqkey)]
 
 
 ###ENCRYPTION###
+def enc():
+    global ciptxt, cipmat
 
-#Insert buffer between repeated letters
-for x in range(1, len(ciptxt)):
-    if ciptxt[x] == ciptxt[x-1]:
-        ciptxt.insert(x,buf)
 
-#ensure that blocks of 2 can be created
-if (len(ciptxt)%2) == 1:
-    ciptxt.append(buf)
+    wid = 5     #key table matrix width
+    buf = 'X'   #buffer character for ciphertext preparation
 
-#split up the ciphertext into blocks of 2
-tmp =[]
-for x in range(0, int(len(ciptxt)/2)):
-    tmp.append(ciptxt[(x*2)] + ciptxt[(x*2)+1])
-ciptxt = tmp
+    #Insert buffer between repeated letters
+    for x in range(1, len(ciptxt)):
+        if ciptxt[x] == ciptxt[x-1]:
+            ciptxt.insert(x,buf)
 
-#transform the text based on cipher matrix
-for x in range(0,len(ciptxt)):
+    #ensure that blocks of 2 can be created
+    if (len(ciptxt)%2) == 1:
+        ciptxt.append(buf)
 
-    block = ciptxt[x]   #select block
+    #split up the ciphertext into blocks of 2
+    tmp =[]
+    for x in range(0, int(len(ciptxt)/2)):
+        tmp.append(ciptxt[(x*2)] + ciptxt[(x*2)+1])
+    ciptxt = tmp
 
-    #seperate values of chosen block
-    a = block[0]
-    b = block[1]
+    #transform the text based on cipher matrix
+    for x in range(0,len(ciptxt)):
 
-    #determine position of each value in cipher matrix
-    a_x = int(cipmat.index(a)%wid)
-    a_y = int(cipmat.index(a)/wid)
-    b_x = int(cipmat.index(b)%wid)
-    b_y = int(cipmat.index(b)/wid)
+        block = ciptxt[x]   #select block
 
-    #If each value is on the same row, assign to the value to the right
-    if(a_y == b_y):
-        if(a_x > 3):
-            a_x = 0
+        #seperate values of chosen block
+        a = block[0]
+        b = block[1]
+
+        #determine position of each value in cipher matrix
+        a_x = int(cipmat.index(a)%wid)
+        a_y = int(cipmat.index(a)/wid)
+        b_x = int(cipmat.index(b)%wid)
+        b_y = int(cipmat.index(b)/wid)
+
+        #If each value is on the same row, assign to the value to the right
+        if(a_y == b_y):
+            if(a_x > 3):
+                a_x = 0
+            else:
+                a_x += 1
+
+            if(b_x > 3):
+                b_x = 0
+            else:
+                b_x += 1
+        #If both values are in the same column, assign to the value below
+        elif(a_x == b_x):
+            if(a_y > 3):
+                a_y = 0
+            else:
+                a_y += 1
+
+            if(b_y > 3):
+                b_y = 0
+            else:
+                b_y += 1
+        #If both x and y values are different, swap x values
         else:
-            a_x += 1
+            a_x, b_x = b_x, a_x
 
-        if(b_x > 3):
-            b_x = 0
-        else:
-            b_x += 1
-    #If both values are in the same column, assign to the value below
-    elif(a_x == b_x):
-        if(a_y > 3):
-            a_y = 0
-        else:
-            a_y += 1
-
-        if(b_y > 3):
-            b_y = 0
-        else:
-            b_y += 1
-    #If both x and y values are different, swap x values
-    else:
-        a_x, b_x = b_x, a_x
-
-    #Replace existing block with newly ciphered one
-    a = cipmat[(a_y*wid)+a_x]
-    b = cipmat[(b_y*wid)+b_x]
-    ciptxt[x] = a + b
+        #Replace existing block with newly ciphered one
+        a = cipmat[(a_y*wid)+a_x]
+        b = cipmat[(b_y*wid)+b_x]
+        ciptxt[x] = a + b
 
 ###DECRYPTION###
+def dec():
+    global cipin, cipmat
 
-#split up the ciphertext into blocks of 2
-tmp =[]
-for x in range(0, int(len(cipin)/2)):
-    tmp.append(cipin[(x*2)] + cipin[(x*2)+1])
-cipin = tmp
+    wid = 5     #key table matrix width
+    buf = 'X'   #buffer character for ciphertext preparation
 
-#transform the text based on cipher matrix
-for x in range(0,len(cipin)):
+    #split up the ciphertext into blocks of 2
+    tmp =[]
+    for x in range(0, int(len(cipin)/2)):
+        tmp.append(cipin[(x*2)] + cipin[(x*2)+1])
+    cipin = tmp
 
-    block = cipin[x]   #select block
+    #transform the text based on cipher matrix
+    for x in range(0,len(cipin)):
 
-    #seperate values of chosen block
-    a = block[0]
-    b = block[1]
+        block = cipin[x]   #select block
 
-    #determine position of each value in cipher matrix
-    a_x = int(cipmat.index(a)%wid)
-    a_y = int(cipmat.index(a)/wid)
-    b_x = int(cipmat.index(b)%wid)
-    b_y = int(cipmat.index(b)/wid)
+        #seperate values of chosen block
+        a = block[0]
+        b = block[1]
 
-    #If each value is on the same row, assign to the value to the left
-    if(a_y == b_y):
-        if(a_x < 1):
-            a_x = 4
+        #determine position of each value in cipher matrix
+        a_x = int(cipmat.index(a)%wid)
+        a_y = int(cipmat.index(a)/wid)
+        b_x = int(cipmat.index(b)%wid)
+        b_y = int(cipmat.index(b)/wid)
+
+        #If each value is on the same row, assign to the value to the left
+        if(a_y == b_y):
+            if(a_x < 1):
+                a_x = 4
+            else:
+                a_x -= 1
+
+            if(b_x < 1):
+                b_x = 4
+            else:
+                b_x -= 1
+        #If both values are in the same column, assign to the value above
+        elif(a_x == b_x):
+            if(a_y < 1):
+                a_y = 4
+            else:
+                a_y -= 1
+
+            if(b_y < 1):
+                b_y = 4
+            else:
+                b_y -= 1
+        #If both x and y values are different, swap x values
         else:
-            a_x -= 1
+            a_x, b_x = b_x, a_x
 
-        if(b_x < 1):
-            b_x = 4
+        #Replace existing block with newly ciphered one
+        a = cipmat[(a_y*wid)+a_x]
+        b = cipmat[(b_y*wid)+b_x]
+        cipin[x] = a + b
+
+###MAIN MENU###
+
+def main_menu():
+    global ciptxt, cipmat, cipin, keyword
+    print("""===PLAYFAIR CIPHER===
+    1. Encrypt
+    2. Decrypt
+    0. Quit
+    """)
+    choice = True
+    while(choice != 0):
+        choice = int(input())
+
+        if(choice == 1):
+            #Get user input
+            keyword = input("Enter the keyword to encode message: ")    #cipher keyword
+            plntxt = input("Enter the message you wish to encrypt: ")   #plaintext message
+
+            keyword = prepare_text(keyword)
+            plntxt = prepare_text(plntxt)
+            ciptxt = list(plntxt)
+            create_matrix()
+            enc()
+
+            print("Keyword: " + keyword)
+            print("Ciphertext: " + ' '.join(ciptxt))
+
+        elif(choice == 2):
+            #Get user input
+            keyword = input("Enter the keyword to encode message: ")    #cipher keyword
+            cipin = input("Enter a ciphertext to decode: ")           #cipher to decrypt
+
+            keyword = prepare_text(keyword)
+            cipin = prepare_text(cipin)
+
+            cipin = list(cipin)
+            create_matrix()
+            dec()
+
+            print("Keyword: " + keyword)
+            print("Plaintext: " + ''.join(cipin))
+
+        elif(choice == 0):
+            print("goodbye!")
+
         else:
-            b_x -= 1
-    #If both values are in the same column, assign to the value above
-    elif(a_x == b_x):
-        if(a_y < 1):
-            a_y = 4
-        else:
-            a_y -= 1
+            print("please try again!")
 
-        if(b_y < 1):
-            b_y = 4
-        else:
-            b_y -= 1
-    #If both x and y values are different, swap x values
-    else:
-        a_x, b_x = b_x, a_x
-
-    #Replace existing block with newly ciphered one
-    a = cipmat[(a_y*wid)+a_x]
-    b = cipmat[(b_y*wid)+b_x]
-    cipin[x] = a + b
-
-###OUTPUT###
-
-print("Keyword: " + keyword)
-print("Ciphertext: " + ' '.join(ciptxt))
-print("Plaintext: " + ''.join(cipin))
+main_menu()
 
 ###DEBUGGING###
 #print(cipmat)
