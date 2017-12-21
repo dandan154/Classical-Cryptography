@@ -62,4 +62,4 @@ def keyword_shift(keyword, square):
 
 	return shift 
 
-keyword_shift("ARSEHOLE",polybius_six)
+keyword_shift("BIGTEST",polybius_six)
