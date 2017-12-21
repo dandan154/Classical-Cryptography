@@ -28,7 +28,9 @@ alphabet = ['A','B','C','D','E',
 digits = ["0","1","2","3","4","5","6","7","8","9"]
 
 def keyword_shift(keyword, square):
-
+	"""
+	Create polybius square using keyword.
+    """
 	#get dimensions of polybius square
 	dim = int(math.sqrt(len(square)))
 
@@ -51,7 +53,7 @@ def keyword_shift(keyword, square):
 		char = list(set(alphabet) - set(shift))
 		dgt = list(set(digits) - set(shift))
 
-		char.sort() 	#sort characters alphabetically
+		char.sort()		#sort characters alphabetically
 		dgt.sort()		#sort digits lowest to highest
 
 		#combine remaining letters with digits - letters first
@@ -60,6 +62,6 @@ def keyword_shift(keyword, square):
 		#combine keyword with remaining characters
 		shift += rmdr
 
-	return shift 
+	return shift
 
-keyword_shift("ARSEHOLE",polybius_six)
+keyword_shift("BIGTEST",polybius_six)
