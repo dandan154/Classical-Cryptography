@@ -1,2 +1,2 @@
-# Playfair
-A python implementation of a playfair/wheatstone cipher
+# Classical Cryptography
+A selection of classical cryptographic techniques
