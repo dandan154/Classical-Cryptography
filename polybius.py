@@ -64,4 +64,29 @@ def keyword_shift(keyword, square):
 
 	return shift
 
-keyword_shift("BIGTEST",polybius_six)
+def enc(plntxt,square):
+
+	#get dimensions of polybius square
+	dim = int(math.sqrt(len(square)))
+
+	ciptxt=[]
+	for x in range(0,len(plntxt)):
+
+		#get list position of current character
+		ind = square.index(plntxt[x])
+
+		z = int(ind/dim)+1		#get X coordinate of character
+		y = (ind%dim)+1			#get Y coordinate of character
+
+		#combine coordinate values into string and add to ciphertext
+		ciptxt.append(str(z) + str(y))
+
+	return ciptxt
+
+
+x = keyword_shift("BIGTEST",polybius_six)
+print("".join(x))
+y = keyword_shift("BIGTEST",polybius_five)
+print("".join(y))
+
+enc("DOGGY",polybius_five)
