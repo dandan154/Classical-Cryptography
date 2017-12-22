@@ -120,7 +120,7 @@ def dec(ciptxt, square):
 
 def bifid_enc(plntxt,square):
 	"""
-	Encrypt a plaintext string using a polybius square using Bifid encryption.
+	Encrypt a plaintext string using a polybius square via Bifid encryption.
 
 	Arguments:
 	plntxt -- plaintext to be ciphered
@@ -154,10 +154,29 @@ def bifid_enc(plntxt,square):
 
 def bifid_dec(ciptxt,square):
 	"""
-	Decrypt a ciphertext string using a polybius square using Bifid encryption.
+	Decrypt a ciphertext string using a polybius square via Bifid decryption.
 
 	Arguments:
 	ciptxt -- ciphertext to be decrypted
 	square -- polybius square - character list
 	"""
-bifid_enc("ABCDE", polybius_five)
+	#Run ciphertext through standard polybius encryption to get coordinates
+	plntxt = enc(ciptxt, square)
+
+	#Seperate each axis' coordinates into seperate rows
+	pln_str = "".join(plntxt)
+	row_top=list(pln_str[0:int(len(pln_str)/2)])
+	row_bottom=list(pln_str[int(len(pln_str)/2):len(pln_str)])
+
+	#Match original X and Y coordinates together
+	pln_str=""
+	for x in range(0, len(row_top)):
+		pln_str += (row_top[x] + row_bottom[x])
+
+	#Convert coordinate pairs into characters
+	plntxt = dec(pln_str,square)
+
+	return plntxt
+
+
+print(bifid_dec(bifid_enc("ABCDE", polybius_five), polybius_five))
