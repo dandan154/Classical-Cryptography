@@ -30,6 +30,10 @@ digits = ["0","1","2","3","4","5","6","7","8","9"]
 def keyword_shift(keyword, square):
 	"""
 	Create polybius square using keyword.
+
+	Arguments:
+	keyword -- string value by which a polybius square is shifted by
+	square -- polybius square - character list
     """
 	#get dimensions of polybius square
 	dim = int(math.sqrt(len(square)))
@@ -65,7 +69,13 @@ def keyword_shift(keyword, square):
 	return shift
 
 def enc(plntxt,square):
+	"""
+	Encrypt a string using a given polybius square
 
+	Arguments:
+	plntxt -- string value of text that is to be encrypted via the square
+	square -- polybius square - character list
+    """
 	#get dimensions of polybius square
 	dim = int(math.sqrt(len(square)))
 
@@ -75,18 +85,40 @@ def enc(plntxt,square):
 		#get list position of current character
 		ind = square.index(plntxt[x])
 
-		z = int(ind/dim)+1		#get X coordinate of character
-		y = (ind%dim)+1			#get Y coordinate of character
+		char_x = int(ind/dim)+1		#get X coordinate of character
+		char_y = (ind%dim)+1		#get Y coordinate of character
 
 		#combine coordinate values into string and add to ciphertext
-		ciptxt.append(str(z) + str(y))
+		ciptxt.append(str(char_x) + str(char_y))
+
+	print(" ".join(ciptxt))
 
 	return ciptxt
 
+def dec(ciptxt, square):
+	"""
+	Decrypt a ciphertext string using a given polybius square
 
-x = keyword_shift("BIGTEST",polybius_six)
-print("".join(x))
-y = keyword_shift("BIGTEST",polybius_five)
-print("".join(y))
+	Arguments:
+	ciptxt -- ciphertext to be converted through the use of the square
+	square -- polybius square - character list
+   	"""
+	#get dimensions of polybius square
+	dim = int(math.sqrt(len(square)))
 
-enc("DOGGY",polybius_five)
+	#parse through ciphertext and convert to characters
+	tmp=[]
+	for x in range(0, int(len(ciptxt)/2)):
+
+		#Get individual values of coordinates & convert to index lookup
+		ind = (int(ciptxt[(x*2)]) - 1) * dim + (int(ciptxt[x*2 + 1]) - 1)
+
+		#Add new character to decrypted plaintext
+		tmp.append(square[ind])
+
+	ciptxt = tmp
+
+	return ciptxt
+
+help(dec)
+help(enc)
