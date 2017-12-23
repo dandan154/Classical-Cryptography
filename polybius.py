@@ -281,9 +281,18 @@ def nihlist_dec(ciptxt, key, square):
 	return plntxt
 
 def trifid_enc(plntxt, cube, group_size):
+	"""
+	Encrypt a plaintext string using Trifid ciphering
 
+	Arguments:
+	ciptxt -- list of ciphertext to be decrypted - integer list
+	cube -- used to encrypt text - character list
+	group_size --
+
+	Returns:
+	plntxt -- decrypted plaintext without spaces - string
+	"""
 	ciptxt=[]
-
 	#Get coordinate values for each character
 	for i in range(0, len(plntxt)):
 		z = int(cube.index(plntxt[i])/9)
@@ -296,7 +305,7 @@ def trifid_enc(plntxt, cube, group_size):
 
 	#Get leftover group length
 	rmdr = len(plntxt) % group_size
-	#print(ciptxt)
+
 	#Cipher each group individually
 	for i in range(0, group_no):
 
@@ -311,13 +320,33 @@ def trifid_enc(plntxt, cube, group_size):
 
 		#Combine coordinate lists to determine new character arrangement
 		x = z + y + x
+
+		#Get new characters for
 		for j in range(0, group_size):
 			ciptxt[group_size*i + j] = cube[(int(x[j*3])*9 + int(x[j*3 + 1])*3 + int(x[j*3 + 2]))]
 
+
+	#Cipher remaining partial group with regards to its own size
+	if (rmdr > 0):
+
+		#Combine coordinate lists to determine new character arrangement
+		x, y, z = [],[],[]
+
+		#Split coordinates of a value into 3 segments
+		for i in range(0, rmdr):
+			val = ciptxt[group_size * group_no + i]
+			z.append(val[0])
+			y.append(val[1])
+			x.append(val[2])
+
+		#Combine coordinate lists to determine new character arrangement
+		x = z + y + x
+
+		#Get new characters for
+		for j in range(0, rmdr):
+			ciptxt[group_size * group_no +j] = cube[(int(x[j*3])*9 + int(x[j*3 + 1])*3 + int(x[j*3 + 2]))]
+
 	return "".join(ciptxt)
-
-
-	print("enc")
 
 def trifid_dec(ciptxt, cube, group_size):
 	print("dec")
