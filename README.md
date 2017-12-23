@@ -5,6 +5,7 @@ A selection of classical cryptographic techniques
 
 * Polybius Square 
   * Bifid
+  * Trifid
   * Nihlist
   * ADFGVX (not implemented)
 * Caesar
