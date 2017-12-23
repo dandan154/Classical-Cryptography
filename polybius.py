@@ -17,6 +17,12 @@ polybius_five = ['A','B','C','D','E',
 'Q','R','S','T','U',
 'V','W','X','Y','Z']
 
+#Default polybius square with 5x5 dimensions
+trifid = ['A','B','C','D','E','F','G','H','I',
+'J','K','L','M','N','O','P','Q','R',
+'S','T','U','V','W','X','Y','Z','+']
+
+
 #Default uppercase alphabet
 alphabet = ['A','B','C','D','E',
 'F','G','H','I','K',
@@ -27,24 +33,42 @@ alphabet = ['A','B','C','D','E',
 #Single digit integers in string format
 digits = ["0","1","2","3","4","5","6","7","8","9"]
 
+#ADFGVX cipher dictionary
+#adfgx = {'A':1 'D':2 'F':3 'G':4 'X':5}
+
 def keyword_shift(keyword, square):
 	"""
 	Create polybius square using keyword.
 
 	Arguments:
 	keyword -- keyword that shifts the square - string
-	square -- polybius square - character list
+	square -- polybius square/trifid cube - character list
 
 	Returns:
-	shift -- shifted polybius square - character list
+	shift -- shifted polybius square/trifid cube - character list
     """
 	#Get dimensions of polybius square
 	dim = int(math.sqrt(len(square)))
+	mod = math.sqrt(len(square)) % 1
 
 	#Remove repeated characters and add to list
 	shift=list(''.join(OrderedDict.fromkeys(keyword)))
 
-	if(dim == 5):
+	#Trifid Cube
+	if(mod > 0):
+		#Determine the remaining characters to be added to square
+		rmdr = list(set(trifid) - set(shift))
+
+		rmdr.sort()
+
+		if '+' in rmdr:
+			rmdr.remove('+')
+			rmdr.append('+')
+
+		shift += rmdr
+
+	#5 x 5 polybius square
+	elif(dim == 5):
 
 		#Determine the remaining characters to be added to square
 		rmdr = list(set(alphabet) - set(shift))
@@ -54,6 +78,7 @@ def keyword_shift(keyword, square):
 		#Combine keyword with remaining characters
 		shift += rmdr
 
+	#6 x 6 polybius square
 	elif(dim == 6):
 
 		#Determine the remaining characters to be added to square
@@ -254,9 +279,55 @@ def nihlist_dec(ciptxt, key, square):
 	plntxt = "".join(plntxt)
 
 	return plntxt
-###TESTING###
-#print(nihlist_dec([37, 106, 62, 36, 67, 47, 86, 26, 104, 53, 62, 77, 27, 55, 57, 66, 55, 36, 54, 27]
-#,"RUSSIAN", keyword_shift("ZEBRAS", polybius_five)))
 
-#print(enc("THE",polybius_five))
-#print(dec("".join(enc("THE",polybius_five)), polybius_five))
+def trifid_enc(plntxt, cube, group_size):
+
+	ciptxt=[]
+
+	#Get coordinate values for each character
+	for i in range(0, len(plntxt)):
+		z = int(cube.index(plntxt[i])/9)
+		y = int(cube.index(plntxt[i])/3 % 3)
+		x = int(cube.index(plntxt[i])%3)
+		ciptxt.append(str(z) + str(y) + str(x))
+
+	#Get no. of groups to split for encryption
+	group_no = int(len(plntxt)/group_size)
+
+	#Get leftover group length
+	rmdr = len(plntxt) % group_size
+	#print(ciptxt)
+	#Cipher each group individually
+	for i in range(0, group_no):
+
+		x, y, z = [],[],[]		#
+
+		#Split coordinates of a value into 3 segments
+		for j in range(0, group_size):
+			val = ciptxt[j + group_size * i]
+			z.append(val[0])
+			y.append(val[1])
+			x.append(val[2])
+
+		#Combine coordinate lists to determine new character arrangement
+		x = z + y + x
+		for j in range(0, group_size):
+			ciptxt[group_size*i + j] = cube[(int(x[j*3])*9 + int(x[j*3 + 1])*3 + int(x[j*3 + 2]))]
+
+	return "".join(ciptxt)
+
+
+	print("enc")
+
+def trifid_dec(ciptxt, cube, group_size):
+	print("dec")
+
+def adfgvx_enc(ciptxt, square):
+	print("enc")
+
+def adfgvx_dec(ciptxt, square):
+	print("enc")
+
+###TESTING###
+print(keyword_shift("FELIXMARIEDELASTELLE", trifid))
+print(trifid_enc("AIDETOILECIELTAIDERA",keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
