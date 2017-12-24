@@ -22,8 +22,7 @@ trifid = ['A','B','C','D','E','F','G','H','I',
 'J','K','L','M','N','O','P','Q','R',
 'S','T','U','V','W','X','Y','Z','+']
 
-
-#Default uppercase alphabet
+#Default uppercase alphabet - (NO J)
 alphabet = ['A','B','C','D','E',
 'F','G','H','I','K',
 'L','M','N','O','P',
@@ -33,8 +32,9 @@ alphabet = ['A','B','C','D','E',
 #Single digit integers in string format
 digits = ["0","1","2","3","4","5","6","7","8","9"]
 
-#ADFGVX cipher dictionary
-#adfgx = {'A':1 'D':2 'F':3 'G':4 'X':5}
+#ADFGVX & ADFGX cipher dictionaries
+adfgx_dict = {1:"A", 2:"D", 3:"F", 4:"G", 5:"X"}
+adfgvx_dict = {1:"A", 2:"D", 3:"F", 4:"G", 5:"V", 6:"X"}
 
 def keyword_shift(keyword, square):
 	"""
@@ -84,6 +84,9 @@ def keyword_shift(keyword, square):
 		#Determine the remaining characters to be added to square
 		char = list(set(alphabet) - set(shift))
 		dgt = list(set(digits) - set(shift))
+
+		if 'J' not in shift:
+			char.append('J')
 
 		char.sort()		#Sort characters alphabetically
 		dgt.sort()		#Sort digits lowest to highest
@@ -285,12 +288,12 @@ def trifid_enc(plntxt, cube, group_size):
 	Encrypt a plaintext string using Trifid ciphering
 
 	Arguments:
-	ciptxt -- list of ciphertext to be decrypted - integer list
+	plntxt -- plaintext string to be encrypted - string
 	cube -- used to encrypt text - character list
-	group_size --
+	group_size -- used to transform ciphertext - integer
 
 	Returns:
-	plntxt -- decrypted plaintext without spaces - string
+	ciptxt -- encrypted ciphertext - string
 	"""
 	ciptxt=[]
 	#Get coordinate values for each character
@@ -309,6 +312,7 @@ def trifid_enc(plntxt, cube, group_size):
 	#Cipher each group individually
 	for i in range(0, group_no):
 
+		#Declare lists to store individual axis coordinates
 		x, y, z = [],[],[]		#
 
 		#Split coordinates of a value into 3 segments
@@ -321,7 +325,7 @@ def trifid_enc(plntxt, cube, group_size):
 		#Combine coordinate lists to determine new character arrangement
 		x = z + y + x
 
-		#Get new characters for
+		#Get new characters from trifid cube
 		for j in range(0, group_size):
 			ciptxt[group_size*i + j] = cube[(int(x[j*3])*9 + int(x[j*3 + 1])*3 + int(x[j*3 + 2]))]
 
@@ -342,21 +346,49 @@ def trifid_enc(plntxt, cube, group_size):
 		#Combine coordinate lists to determine new character arrangement
 		x = z + y + x
 
-		#Get new characters for
+		#Get new characters from trifid cube
 		for j in range(0, rmdr):
 			ciptxt[group_size * group_no +j] = cube[(int(x[j*3])*9 + int(x[j*3 + 1])*3 + int(x[j*3 + 2]))]
 
 	return "".join(ciptxt)
 
 def trifid_dec(ciptxt, cube, group_size):
-	print("dec")
+	"""
+	Encrypt a plaintext string using Trifid ciphering
 
-def adfgvx_enc(ciptxt, square):
+	Arguments:
+	ciptxt -- list of ciphertext to be decrypted - integer list
+	cube -- used to encrypt text - character list
+	group_size -- used to transform ciphertext - integer
+
+	Returns:
+	plntxt -- decrypted plaintext without spaces - string
+	"""
+
+	plntxt=[]
+	#Get coordinate values for each character
+	for i in range(0, len(ciptxt)):
+		z = int(cube.index(ciptxt[i])/9)
+		y = int(cube.index(ciptxt[i])/3 % 3)
+		x = int(cube.index(ciptxt[i])%3)
+		plntxt.append(str(z) + str(y) + str(x))
+
+	#Get no. of groups to split for encryption
+	group_no = int(len(plntxt)/group_size)
+
+	#Get leftover group length
+	rmdr = len(plntxt) % group_size
+
+
+def adfgvx_enc(ciptxt, key, square):
 	print("enc")
 
-def adfgvx_dec(ciptxt, square):
+def adfgvx_dec(ciptxt, key, square):
 	print("enc")
 
 ###TESTING###
 print(keyword_shift("FELIXMARIEDELASTELLE", trifid))
 print(trifid_enc("AIDETOILECIELTAIDERA",keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
+print(trifid_dec("FMJFVOISSUFTFPUFEQQC", keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
+
+print(adfgvx_dict[1])
