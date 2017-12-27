@@ -119,7 +119,7 @@ def enc(plntxt,square):
 		#Get list position of current character
 		ind = square.index(plntxt[x])
 
-		char_x = int(ind/dim)+1		#X coordinate of character
+		char_x = ind // dim + 1		#X coordinate of character
 		char_y = (ind%dim)+1		#Y coordinate of character
 
 		#Combine coordinate values into string and add to ciphertext
@@ -206,8 +206,8 @@ def bifid_dec(ciptxt,square):
 
 	#Seperate each axis' coordinates into seperate rows
 	pln_str = "".join(plntxt)
-	row_top=list(pln_str[0:int(len(pln_str)/2)])
-	row_bottom=list(pln_str[int(len(pln_str)/2):len(pln_str)])
+	row_top=list(pln_str[0:len(pln_str)//2])
+	row_bottom=list(pln_str[len(pln_str)//2:len(pln_str)])
 
 	#Match original X and Y coordinates together
 	pln_str=""
@@ -236,7 +236,7 @@ def nihlist_enc(plntxt, key, square):
 
 	#Repeat key to match plaintext length
 	if(plen > klen):
-		key = (key * (int(plen/klen) + 1))
+		key = (key * (plen // klen) + 1)
 		key = key[0:plen]
 
 	#Get polybius square integer representations of key and plaintext
@@ -266,7 +266,7 @@ def nihlist_dec(ciptxt, key, square):
 
 	#Repeat key to match ciphertext length
 	if(clen > klen):
-		key =  (key * (int(clen/klen) + 1))
+		key =  (key * (clen // klen) + 1)
 		key = key[0:clen]
 
 	#Prepare key for arithmetic
@@ -298,13 +298,13 @@ def trifid_enc(plntxt, cube, group_size):
 	ciptxt=[]
 	#Get coordinate values for each character
 	for i in range(0, len(plntxt)):
-		z = int(cube.index(plntxt[i])/9)
-		y = int(cube.index(plntxt[i])/3 % 3)
-		x = int(cube.index(plntxt[i])%3)
+		z = cube.index(plntxt[i]) // 9
+		y = cube.index(plntxt[i]) // 3 % 3
+		x = cube.index(plntxt[i]) % 3
 		ciptxt.append(str(z) + str(y) + str(x))
 
 	#Get no. of groups to split for encryption
-	group_no = int(len(plntxt)/group_size)
+	group_no = len(plntxt) // group_size
 
 	#Get leftover group length
 	rmdr = len(plntxt) % group_size
@@ -368,13 +368,13 @@ def trifid_dec(ciptxt, cube, group_size):
 	plntxt=[]
 	#Get coordinate values for each character
 	for i in range(0, len(ciptxt)):
-		z = int(cube.index(ciptxt[i])/9)
-		y = int(cube.index(ciptxt[i])/3 % 3)
-		x = int(cube.index(ciptxt[i])%3)
+		z = cube.index(ciptxt[i]) // 9
+		y = cube.index(ciptxt[i]) // 3 % 3
+		x = cube.index(ciptxt[i]) % 3
 		plntxt.append(str(z) + str(y) + str(x))
 
 	#Get no. of groups to split for encryption
-	group_no = int(len(plntxt)/group_size)
+	group_no = len(plntxt) // group_size
 
 	#Get leftover group length
 	rmdr = len(plntxt) % group_size
