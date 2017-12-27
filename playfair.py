@@ -61,12 +61,12 @@ def enc():
             ciptxt.insert(x,buf)
 
     #ensure that blocks of 2 can be created
-    if (len(ciptxt)%2) == 1:
+    if (len(ciptxt) % 2) == 1:
         ciptxt.append(buf)
 
     #split up the ciphertext into blocks of 2
     tmp =[]
-    for x in range(0, int(len(ciptxt)/2)):
+    for x in range(0, len(ciptxt) // 2):
         tmp.append(ciptxt[(x*2)] + ciptxt[(x*2)+1])
     ciptxt = tmp
 
@@ -80,10 +80,10 @@ def enc():
         b = block[1]
 
         #determine position of each value in cipher matrix
-        a_x = int(cipmat.index(a)%wid)
-        a_y = int(cipmat.index(a)/wid)
-        b_x = int(cipmat.index(b)%wid)
-        b_y = int(cipmat.index(b)/wid)
+        a_x = cipmat.index(a) % wid
+        a_y = cipmat.index(a) // wid
+        b_x = cipmat.index(b) % wid
+        b_y = cipmat.index(b) // wid
 
         #If each value is on the same row, assign to the value to the right
         if(a_y == b_y):
@@ -125,7 +125,7 @@ def dec():
 
     #split up the ciphertext into blocks of 2
     tmp =[]
-    for x in range(0, int(len(cipin)/2)):
+    for x in range(0, len(cipin) // 2):
         tmp.append(cipin[(x*2)] + cipin[(x*2)+1])
     cipin = tmp
 
@@ -139,10 +139,10 @@ def dec():
         b = block[1]
 
         #determine position of each value in cipher matrix
-        a_x = int(cipmat.index(a)%wid)
-        a_y = int(cipmat.index(a)/wid)
-        b_x = int(cipmat.index(b)%wid)
-        b_y = int(cipmat.index(b)/wid)
+        a_x = cipmat.index(a) % wid
+        a_y = cipmat.index(a) // wid
+        b_x = cipmat.index(b) % wid
+        b_y = cipmat.index(b) // wid
 
         #If each value is on the same row, assign to the value to the left
         if(a_y == b_y):
@@ -222,5 +222,4 @@ def main_menu():
 
         else:
             print("please try again!")
-            
 main_menu()
