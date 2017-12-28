@@ -5,7 +5,11 @@ import caesar
 import argparse
 
 parser = argparse.ArgumentParser(description="")
+
+#Define main arguments
 parser.add_argument("text", help="The text to be ran through the encryption scheme", type=str)
+
+#Define optional arguments
 parser.add_argument("-k", "--key", help="Insert the key used to decrypt or encrypt the given string", default="", type=str)
 parser.add_argument("-e", "--encrypt", help="perform an encryption function", action="store_true")
 parser.add_argument("-d", "--decrypt", help="perform a decryption function", action="store_true")
@@ -13,6 +17,7 @@ parser.add_argument("-c", "--cipher", choices=['caesar', 'polybius', 'bifid', 'n
 parser.add_argument("-s", "--square", help="defines the keyword by which a polybius square/trifid cube is shifted", default="", type=str)
 parser.add_argument("-g", "--group", help="defines the size of the stages in which a plaintext is ciphered (trifid only)", default=0, type=int)
 parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
+
 args = parser.parse_args()
 
 
@@ -20,10 +25,8 @@ def formatter(x):
     x = x.upper()
     x = x.replace(' ','')
     x = x.replace('J','I')
-    print(x)
     if not x.isalpha():
         x = ""
-    print(x)
     return x
 
 def enc_list(text, key, cipher, square, group):
@@ -50,9 +53,10 @@ def enc_list(text, key, cipher, square, group):
         output= " ".join(polybius.nihlist_enc(text, key, polybius.keyword_shift(square, polybius.polybius_five)))
 
     elif cipher == "playfair":
-        print("playfair")
+        output = playfair.enc(text, key)
     return output
 
+#Decryption Methods
 def dec_list(text, key, cipher, square, group):
     output=""
     #Encryption Methods
@@ -76,7 +80,7 @@ def dec_list(text, key, cipher, square, group):
         output= " ".join(polybius.nihlist_dec(text, key, polybius.keyword_shift(square, polybius.polybius_five)))
 
     elif cipher == "playfair":
-        print("playfair")
+        output = playfair.dec(text, key)
 
     return output
 
