@@ -1,20 +1,9 @@
-#!/usr/bin/python3
-
 from copy import deepcopy
 from collections import OrderedDict
 
-###PREPARE TEXT FOR PARSING###
-def prepare_text(x):
-
-    x = x.upper()
-    x = x.replace(' ','')
-    x = x.replace('J','I')
-
-    return x
-
 ###CIPHER MATRIX CREATION###
-def create_matrix():
-    global ciptxt, cipmat, keyword
+def create_matrix(keyword):
+
     #Define base alphabet matrix
     alphamat = ['A','B','C','D','E',
     'F','G','H','I','K',
@@ -46,11 +35,14 @@ def create_matrix():
     for x in range(len(unqkey),len(cipmat)):
         cipmat[x] = rmdr[x-len(unqkey)]
 
+    return cipmat
 
 ###ENCRYPTION###
-def enc():
-    global ciptxt, cipmat
+def enc(ciptxt, key):
 
+    ciptxt = list(ciptxt)
+    #Create new cipher table using given key
+    cipmat = create_matrix(key)
 
     wid = 5     #key table matrix width
     buf = 'X'   #buffer character for ciphertext preparation
@@ -116,23 +108,27 @@ def enc():
         b = cipmat[(b_y*wid)+b_x]
         ciptxt[x] = a + b
 
+    return "".join(ciptxt)
+
 ###DECRYPTION###
-def dec():
-    global cipin, cipmat
+def dec(plntxt, key):
+
+    #Create new cipher table using given key
+    cipmat = create_matrix(key)
 
     wid = 5     #key table matrix width
     buf = 'X'   #buffer character for ciphertext preparation
 
     #split up the ciphertext into blocks of 2
     tmp =[]
-    for x in range(0, len(cipin) // 2):
-        tmp.append(cipin[(x*2)] + cipin[(x*2)+1])
-    cipin = tmp
+    for x in range(0, len(plntxt) // 2):
+        tmp.append(plntxt[(x*2)] + plntxt[(x*2)+1])
+    plntxt = tmp
 
     #transform the text based on cipher matrix
-    for x in range(0,len(cipin)):
+    for x in range(0,len(plntxt)):
 
-        block = cipin[x]   #select block
+        block = plntxt[x]   #select block
 
         #seperate values of chosen block
         a = block[0]
@@ -173,4 +169,6 @@ def dec():
         #Replace existing block with newly ciphered one
         a = cipmat[(a_y*wid)+a_x]
         b = cipmat[(b_y*wid)+b_x]
-        cipin[x] = a + b
+        plntxt[x] = a + b
+
+    return "".join(plntxt)
