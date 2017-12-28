@@ -16,6 +16,15 @@ parser.add_argument("-v", "--verbose", help="increase output verbosity", action=
 args = parser.parse_args()
 
 
+def formatter(x):
+    x = x.upper()
+    x = x.replace(' ','')
+    x = x.replace('J','I')
+    print(x)
+    if not x.isalpha():
+        x = ""
+    print(x)
+    return x
 
 def enc_list(text, key, cipher, square, group):
     output=""
@@ -23,18 +32,18 @@ def enc_list(text, key, cipher, square, group):
     if cipher == "caesar":
         try:
             key=int(key)
-            output = "".join(caesar.enc(list(text), key))
+            output = "".join(caesar.enc(list(text.upper()), key))
         except ValueError:
             output="Incorrect key value entered: for caesar ciphers, use an integer key"
 
     elif cipher == "polybius":
-        output = " ".join(polybius.enc(text, (polybius.keyword_shift(square, polybius.polybius_five))))
+        output = " ".join(polybius.enc(formatter(text), (polybius.keyword_shift(formatter(square), polybius.polybius_five))))
 
     elif cipher == "bifid":
-        output = "".join(polybius.bifid_enc(text, (polybius.keyword_shift(square, polybius.polybius_five))))
+        output = "".join(polybius.bifid_enc(formatter(text), (polybius.keyword_shift(formatter(square), polybius.polybius_five))))
 
     elif cipher == "trifid":
-        output = polybius.trifid_enc(text, polybius.keyword_shift(square, polybius.trifid), group)
+        output = polybius.trifid_enc(formatter(text), polybius.keyword_shift(formatter(square), polybius.trifid), group)
 
     elif cipher =="nihlist":
         output= " ".join(polybius.nihlist_enc(text, key, polybius.keyword_shift(square, polybius.polybius_five)))
@@ -54,10 +63,10 @@ def dec_list(text, key, cipher, square, group):
             output="Incorrect key value entered: for caesar ciphers, use an integer key"
 
     elif cipher == "polybius":
-        output = "".join(polybius.dec(text, (polybius.keyword_shift(square, polybius.polybius_five))))
+        output = "".join(polybius.dec(format_input(text), (polybius.keyword_shift(square, polybius.polybius_five))))
 
     elif cipher == "bifid":
-        output = "".join(polybius.bifid_dec(text, (polybius.keyword_shift(square, polybius.polybius_five))))
+        output = "".join(polybius.bifid_dec(format_input(text), (polybius.keyword_shift(square, polybius.polybius_five))))
 
     elif cipher == "trifid":
         output = polybius.trifid_dec(text, polybius.keyword_shift(square, polybius.trifid), group)
@@ -69,7 +78,6 @@ def dec_list(text, key, cipher, square, group):
         print("playfair")
 
     return output
-
 
 
 output=""
