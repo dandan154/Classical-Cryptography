@@ -236,7 +236,7 @@ def nihlist_enc(plntxt, key, square):
 
 	#Repeat key to match plaintext length
 	if(plen > klen):
-		key = (key * (plen // klen) + 1)
+		key = (key * ((plen // klen) + 1))
 		key = key[0:plen]
 
 	#Get polybius square integer representations of key and plaintext
