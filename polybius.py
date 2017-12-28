@@ -229,7 +229,7 @@ def nihlist_enc(plntxt, key, square):
 	square -- polybius square - character list
 
 	Returns:
-	ciptxt -- list of encypted characters - integer list
+	ciptxt -- list of encypted characters - string list
 	"""
 	plen = len(plntxt)	#plaintext length
 	klen = len(key)		#key length
@@ -245,7 +245,7 @@ def nihlist_enc(plntxt, key, square):
 
 	#Add key and plaintext polybius integer values together
 	for x in range(0, plen):
-		ciptxt[x] = ciptxt[x] + keylist[x]
+		ciptxt[x] = str(ciptxt[x] + keylist[x])
 
 	return ciptxt
 
@@ -387,8 +387,8 @@ def adfgvx_dec(ciptxt, key, square):
 	print("enc")
 
 ###TESTING###
-print(keyword_shift("FELIXMARIEDELASTELLE", trifid))
-print(trifid_enc("AIDETOILECIELTAIDERA",keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
-print(trifid_dec("FMJFVOISSUFTFPUFEQQC", keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
+#print(keyword_shift("FELIXMARIEDELASTELLE", trifid))
+#print(trifid_enc("AIDETOILECIELTAIDERA",keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
+#print(trifid_dec("FMJFVOISSUFTFPUFEQQC", keyword_shift("FELIXMARIEDELASTELLE", trifid), 5))
 
-print(adfgvx_dict[1])
+#print(adfgvx_dict[1])
