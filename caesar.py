@@ -11,7 +11,7 @@ def enc(plntxt, key):
     return plntxt
 
 def dec(ciptxt, key):
-    for x in range(0, len(plntxt)):
+    for x in range(0, len(ciptxt)):
         if ciptxt[x] in alphabet:
             ciptxt[x] = alphabet[(alphabet.index(ciptxt[x]) - key) % len(alphabet)]
     return ciptxt
