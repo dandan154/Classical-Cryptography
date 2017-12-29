@@ -2,7 +2,7 @@
 
 echo "===CAESAR TEST==="
 python3 crypto.py HELLO -k 13
-python crypto.py URYYB -k 13 -d
+python3 crypto.py URYYB -k 13 -d
 echo ''
 echo "===POLYBIUS TEST==="
 python3 crypto.py HELLO -c polybius -s WORLD
@@ -14,7 +14,7 @@ python3 crypto.py HHAOEEMRRM -c bifid -s HELLO -d
 echo ''
 echo "==TRIFID TEST==="
 python3 crypto.py HELLOWORLD -c trifid -s HELLO -g 5
-echo "---NO DECRYPT YET---"
+python3 crypto.py HHHIYTEPVZ -c trifid -s HELLO -g 5 -d
 echo ''
 echo "==PLAYFAIR TEST==="
 python3 crypto.py HELLOWORLD -c playfair -k WORLD
