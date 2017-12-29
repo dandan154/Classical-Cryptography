@@ -364,7 +364,6 @@ def trifid_dec(ciptxt, cube, group_size):
 	Returns:
 	plntxt -- decrypted plaintext without spaces - string
 	"""
-
 	plntxt=[]
 	#Get coordinate values for each character
 	for i in range(0, len(ciptxt)):
@@ -379,6 +378,48 @@ def trifid_dec(ciptxt, cube, group_size):
 	#Get leftover group length
 	rmdr = len(plntxt) % group_size
 
+	#Cipher each group individually
+	for i in range(0, group_no):
+
+		#Select current group from coordinate list
+		val = plntxt[i * group_size: (i + 1) * group_size]
+
+		#Convert to string for easy parsing
+		val = "".join(val)
+
+		tmp=[]
+		#Determine orignial plaintext coordinates
+		for j in range(group_size):
+
+			tmp.append(val[j])
+			tmp.append(val[group_size + j])
+			tmp.append(val[group_size *2 + j])
+
+		#Get new characters from trifid cube
+		for j in range(0, group_size):
+			plntxt[group_size * i + j] = cube[(int(tmp[j*3])*9 + int(tmp[j*3 + 1])*3 + int(tmp[j*3 + 2]))]
+
+	if rmdr > 0:
+
+		#Select current group from coordinate list
+		val = plntxt[group_no * group_size: len(plntxt)]
+
+		#Convert to string for easy parsing
+		val = "".join(val)
+
+		tmp=[]
+		#Determine orignial plaintext coordinates
+		for j in range(rmdr):
+
+			tmp.append(val[j])
+			tmp.append(val[rmdr + j])
+			tmp.append(val[rmdr *2 + j])
+
+		#Get new characters from trifid cube
+		for j in range(0, rmdr):
+			plntxt[group_no* group_size + j] = cube[(int(tmp[j*3])*9 + int(tmp[j*3 + 1])*3 + int(tmp[j*3 + 2]))]
+
+	return "".join(plntxt)
 
 def adfgvx_enc(ciptxt, key, square):
 	print("enc")
