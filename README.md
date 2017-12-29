@@ -1,5 +1,5 @@
 # Classical Cryptography
-A selection of classical cryptographic techniques
+A selection of classical cryptographic techniques for use with the Latin alphabet. 
 
 ## Cipher List
 
