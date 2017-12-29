@@ -14,7 +14,7 @@ A selection of classical cryptographic techniques for use with the Latin alphabe
 
 Perform a ROT13 cipher shift on a simple plaintext:
 ```
-python3 cipher.py "HELLO WORLD" -c caesar -e -k 13
+python3 crypto.py "HELLO WORLD" -c caesar -e -k 13
 ```
 Decipher polybius coordinate numbers using a standard polybius square:
 ```
