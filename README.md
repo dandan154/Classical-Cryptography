@@ -7,10 +7,8 @@ A selection of classical cryptographic techniques
   * Bifid
   * Trifid
   * Nihlist
-  * ADFGVX (not implemented)
 * Caesar
 * Playfair
-* Rail fence (not implemented)
 
 ## Example Usage
 
